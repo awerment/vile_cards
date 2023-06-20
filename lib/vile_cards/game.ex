@@ -58,6 +58,14 @@ defmodule VileCards.Game do
     %Game{game | players: updated_players}
   end
 
+  def force_picks(%Game{players: players, card: %{pick: pick}, czar: czar} = game) do
+    players
+    |> Enum.filter(fn {id, player} -> player.pick == [] and id != czar end)
+    |> Enum.reduce(game, fn {id, %Player{hand: hand}}, game ->
+      player_pick(game, id, Enum.shuffle(hand) |> Enum.take(pick))
+    end)
+  end
+
   defp discard_picks(%Game{players: players, white: white} = game) do
     {updated_white, updated_players} =
       players

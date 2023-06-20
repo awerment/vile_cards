@@ -224,4 +224,42 @@ defmodule VileCards.GameTest do
              |> MapSet.disjoint?(MapSet.new(pick_2 ++ pick_3))
     end
   end
+
+  describe "force_picks/1" do
+    test "force picks cards for non-czar players that haven't picked themselves" do
+      game = %Game{
+        players: %{
+          "id-1" =>
+            Player.new("id-1", "name-1")
+            |> Map.put(:hand, Enum.to_list(1..10)),
+          "id-2" =>
+            Player.new("id-2", "name-2")
+            |> Map.put(:hand, Enum.to_list(13..20))
+            |> Map.put(:pick, [11, 12]),
+          "id-3" =>
+            Player.new("id-3", "name-3")
+            |> Map.put(:hand, Enum.to_list(21..30))
+        },
+        card: %{pick: 2},
+        czar: "id-1"
+      }
+
+      assert %Game{
+               players: %{
+                 # is czar, no force pick
+                 "id-1" => %Player{pick: []},
+                 # had already picked
+                 "id-2" => %Player{pick: [11, 12]},
+                 # force picked at random
+                 "id-3" => %Player{pick: [_, _] = pick_3, hand: hand_3}
+               },
+               card: %{pick: 2},
+               czar: "id-1"
+             } = Game.force_picks(game)
+
+      assert 21..30
+             |> MapSet.new()
+             |> MapSet.equal?(MapSet.new(pick_3 ++ hand_3))
+    end
+  end
 end
