@@ -292,4 +292,37 @@ defmodule VileCards.GameTest do
              } = Game.czar_pick(game, "id-3")
     end
   end
+
+  describe "all together now" do
+    test "8 players, playing 1000 rounds, picking 1..3 cards" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..20), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Game.player_join({"id-3", "name-3"})
+        |> Game.player_join({"id-4", "name-4"})
+        |> Game.player_join({"id-5", "name-5"})
+        |> Game.player_join({"id-6", "name-6"})
+        |> Game.player_join({"id-7", "name-7"})
+        |> Game.player_join({"id-8", "name-8"})
+        |> play_n_rounds(1000, 1..3)
+
+      assert 1000 ==
+               game.players
+               |> Enum.reduce(0, fn {_id, player}, total_score -> total_score + player.score end)
+    end
+  end
+
+  defp play_n_rounds(game, n, pick_range) do
+    player_ids = game.players |> Enum.map(&elem(&1, 0))
+
+    Enum.reduce(1..n, game, fn _round, game ->
+      Enum.reduce(game.players, Game.start_round(game), fn {id, player}, game ->
+        if id == game.czar,
+          do: game,
+          else: Game.player_pick(game, id, Enum.take(player.hand, Enum.random(pick_range)))
+      end)
+      |> Game.czar_pick(Enum.random(player_ids -- [game.czar]))
+    end)
+  end
 end
