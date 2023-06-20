@@ -63,4 +63,24 @@ defmodule VileCards.GameTest do
       assert %{"id-1" => %Player{id: "id-1", name: "name-1"}} = game.players
     end
   end
+
+  describe "deal/1" do
+    test "deals white cards to players' hands" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+
+      assert %{"id-1" => %Player{hand: []}, "id-2" => %Player{hand: []}} = game.players
+
+      %Game{white: {draw, []}, players: players} = Game.deal(game)
+
+      assert %{"id-1" => %Player{hand: id_1_hand}, "id-2" => %Player{hand: id_2_hand}} = players
+      assert Enum.count(id_1_hand) == 10
+      assert Enum.count(id_2_hand) == 10
+      assert Enum.count(draw) == 80
+      assert MapSet.disjoint?(MapSet.new(id_1_hand), MapSet.new(id_2_hand))
+      assert MapSet.disjoint?(MapSet.new(id_1_hand ++ id_2_hand), MapSet.new(draw))
+    end
+  end
 end

@@ -1,7 +1,7 @@
 defmodule VileCards.Game do
   defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0
 
-  alias VileCards.{Game, Player}
+  alias VileCards.{Deck, Game, Player}
 
   def new({id, name} = _admin, black, white) do
     %Game{
@@ -21,5 +21,21 @@ defmodule VileCards.Game do
     Map.replace_lazy(game, :players, fn players ->
       Map.delete(players, id)
     end)
+  end
+
+  @hand_count 10
+  def deal(%Game{white: white, players: players} = game) do
+    {updated_white, updated_players} =
+      players
+      |> Enum.reduce({white, players}, fn {id, player}, {deck, players} ->
+        {deck, drawn} = Deck.draw(deck, @hand_count - Enum.count(player.hand))
+
+        {deck,
+         Map.replace_lazy(players, id, fn player ->
+           Map.replace_lazy(player, :hand, fn hand -> hand ++ drawn end)
+         end)}
+      end)
+
+    %Game{game | white: updated_white, players: updated_players}
   end
 end
