@@ -11,7 +11,8 @@ defmodule VileCards.GameTest do
                  black: {["a black card"], []},
                  white: {["a white card"], []},
                  round: 0,
-                 card: nil
+                 card: nil,
+                 czar: nil
                }
     end
   end
@@ -93,13 +94,80 @@ defmodule VileCards.GameTest do
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_join({"id-3", "name-3"})
 
-      assert %Game{round: 0, card: nil} = game
+      assert %Game{round: 0, card: nil, czar: nil} = game
 
       game = Game.start_round(game)
 
-      assert %Game{round: 1, card: card, black: {draw, []}} = game
+      assert %Game{round: 1, card: card, black: {draw, []}, players: players, czar: czar} = game
       assert card in Enum.to_list(1..10)
       refute card in draw
+      assert czar in Enum.map(players, &elem(&1, 0))
+    end
+
+    test "picks a new czar, cycling through players sorted by id" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Game.player_join({"id-3", "name-3"})
+        |> Map.put(:czar, "id-1")
+
+      game = Game.start_round(game)
+      assert game.czar == "id-2"
+
+      game = Game.start_round(game)
+      assert game.czar == "id-3"
+
+      game = Game.start_round(game)
+      assert game.czar == "id-1"
+    end
+
+    test "if czar has left, picks first player with id > previous czar's id" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Game.player_join({"id-3", "name-3"})
+        |> Map.put(:czar, "id-1")
+
+      game = Game.start_round(game)
+      assert game.czar == "id-2"
+
+      game = Game.player_leave(game, "id-2") |> Game.start_round()
+      assert game.czar == "id-3"
+    end
+
+    test "only player left becomes czar" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Map.put(:czar, "id-1")
+
+      game = Game.start_round(game)
+      assert game.czar == "id-2"
+
+      game = Game.player_leave(game, "id-2") |> Game.start_round()
+      assert game.czar == "id-1"
+    end
+
+    test "when no players are left, sets czar to nil" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Map.put(:czar, "id-1")
+
+      game = Game.start_round(game)
+      assert game.czar == "id-2"
+
+      game =
+        game
+        |> Game.player_leave("id-1")
+        |> Game.player_leave("id-2")
+        |> Game.start_round()
+
+      assert game.czar == nil
     end
   end
 end

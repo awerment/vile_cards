@@ -1,5 +1,5 @@
 defmodule VileCards.Game do
-  defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0, card: nil
+  defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0, card: nil, czar: nil
 
   alias VileCards.{Deck, Game, Player}
 
@@ -42,6 +42,34 @@ defmodule VileCards.Game do
   def start_round(%Game{black: black, round: round} = game) do
     {black, [card]} = Deck.draw(black, 1)
 
-    %Game{game | black: black, round: round + 1, card: card} |> deal()
+    %Game{game | black: black, round: round + 1, card: card}
+    |> pick_czar()
+    |> deal()
+  end
+
+  defp pick_czar(%Game{players: players} = game) when map_size(players) == 0 do
+    %Game{game | czar: nil}
+  end
+
+  defp pick_czar(%Game{players: players, czar: nil} = game) do
+    %Game{game | czar: Enum.random(players) |> elem(0)}
+  end
+
+  defp pick_czar(%Game{players: players} = game) when map_size(players) == 1 do
+    %Game{game | czar: Enum.at(players, 0) |> elem(0)}
+  end
+
+  defp pick_czar(%Game{players: players, czar: czar} = game) do
+    new_czar =
+      players
+      |> Enum.map(fn {id, _player} -> id end)
+      |> then(fn ids -> MapSet.new([czar | ids]) end)
+      |> Enum.sort()
+      |> Stream.cycle()
+      |> Stream.drop_while(fn id -> id != czar end)
+      |> Stream.drop(1)
+      |> Enum.at(0)
+
+    %Game{game | czar: new_czar}
   end
 end
