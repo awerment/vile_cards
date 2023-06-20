@@ -10,4 +10,16 @@ defmodule VileCards.Game do
       white: white
     }
   end
+
+  def player_join(%Game{} = game, {id, name}) do
+    Map.replace_lazy(game, :players, fn players ->
+      Map.put_new(players, id, Player.new(id, name))
+    end)
+  end
+
+  def player_leave(%Game{} = game, id) do
+    Map.replace_lazy(game, :players, fn players ->
+      Map.delete(players, id)
+    end)
+  end
 end
