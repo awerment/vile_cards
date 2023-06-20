@@ -8,8 +8,8 @@ defmodule VileCards.GameTest do
       assert Game.new({"id", "name"}, ["a black card"], ["a white card"]) ==
                %Game{
                  players: %{"id" => %Player{id: "id", name: "name"}},
-                 black: ["a black card"],
-                 white: ["a white card"],
+                 black: {["a black card"], []},
+                 white: {["a white card"], []},
                  round: 0
                }
     end
