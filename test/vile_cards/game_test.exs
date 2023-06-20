@@ -86,6 +86,25 @@ defmodule VileCards.GameTest do
     end
   end
 
+  describe "player_pick/3" do
+    test "updates the player's pick" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Game.start_round()
+        # force czar
+        |> Map.put(:czar, "id-1")
+
+      assert %{"id-2" => %Player{hand: hand, pick: []}} = game.players
+      {pick, _rest} = Enum.split(hand, 3)
+
+      game = Game.player_pick(game, "id-2", pick)
+      assert %{"id-2" => %Player{hand: hand, pick: ^pick}} = game.players
+      assert MapSet.disjoint?(MapSet.new(hand), MapSet.new(pick))
+    end
+  end
+
   describe "start_round/1" do
     test "starts a new round" do
       game =
@@ -168,6 +187,41 @@ defmodule VileCards.GameTest do
         |> Game.start_round()
 
       assert game.czar == nil
+    end
+
+    test "discards players' picked cards" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Game.player_join({"id-3", "name-3"})
+        |> Game.start_round()
+        |> Map.put(:czar, "id-1")
+
+      %{"id-2" => %Player{hand: hand_2}, "id-3" => %Player{hand: hand_3}} = game.players
+      {pick_2, _rest} = Enum.split(hand_2, 2)
+      {pick_3, _rest} = Enum.split(hand_3, 2)
+
+      game =
+        game
+        |> Game.player_pick("id-2", pick_2)
+        |> Game.player_pick("id-3", pick_3)
+        |> Game.start_round()
+
+      %{"id-2" => %Player{hand: hand_2}, "id-3" => %Player{hand: hand_3}} = game.players
+      assert MapSet.disjoint?(MapSet.new(pick_2), MapSet.new(hand_2))
+      assert MapSet.disjoint?(MapSet.new(pick_3), MapSet.new(hand_3))
+
+      {draw, discard} = game.white
+
+      assert discard
+             |> List.flatten()
+             |> MapSet.new()
+             |> MapSet.equal?(MapSet.new(pick_2 ++ pick_3))
+
+      assert draw
+             |> MapSet.new()
+             |> MapSet.disjoint?(MapSet.new(pick_2 ++ pick_3))
     end
   end
 end
