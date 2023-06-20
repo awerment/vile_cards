@@ -10,7 +10,8 @@ defmodule VileCards.GameTest do
                  players: %{"id" => %Player{id: "id", name: "name"}},
                  black: {["a black card"], []},
                  white: {["a white card"], []},
-                 round: 0
+                 round: 0,
+                 card: nil
                }
     end
   end
@@ -81,6 +82,24 @@ defmodule VileCards.GameTest do
       assert Enum.count(draw) == 80
       assert MapSet.disjoint?(MapSet.new(id_1_hand), MapSet.new(id_2_hand))
       assert MapSet.disjoint?(MapSet.new(id_1_hand ++ id_2_hand), MapSet.new(draw))
+    end
+  end
+
+  describe "start_round/1" do
+    test "starts a new round" do
+      game =
+        {"id-1", "name-1"}
+        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        |> Game.player_join({"id-2", "name-2"})
+        |> Game.player_join({"id-3", "name-3"})
+
+      assert %Game{round: 0, card: nil} = game
+
+      game = Game.start_round(game)
+
+      assert %Game{round: 1, card: card, black: {draw, []}} = game
+      assert card in Enum.to_list(1..10)
+      refute card in draw
     end
   end
 end

@@ -1,5 +1,5 @@
 defmodule VileCards.Game do
-  defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0
+  defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0, card: nil
 
   alias VileCards.{Deck, Game, Player}
 
@@ -37,5 +37,11 @@ defmodule VileCards.Game do
       end)
 
     %Game{game | white: updated_white, players: updated_players}
+  end
+
+  def start_round(%Game{black: black, round: round} = game) do
+    {black, [card]} = Deck.draw(black, 1)
+
+    %Game{game | black: black, round: round + 1, card: card} |> deal()
   end
 end
