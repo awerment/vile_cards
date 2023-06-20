@@ -42,6 +42,7 @@ defmodule VileCards.Game do
   def start_round(%Game{round: round} = game) do
     %Game{game | round: round + 1}
     |> discard_picks()
+    |> discard_black()
     |> pick_czar()
     |> draw_black()
     |> deal()
@@ -118,7 +119,13 @@ defmodule VileCards.Game do
 
   defp draw_black(%Game{black: black} = game) do
     {black, [card]} = Deck.draw(black, 1)
-
     %Game{game | black: black, card: card}
+  end
+
+  defp discard_black(%Game{card: nil} = game), do: game
+
+  defp discard_black(%Game{black: black, card: card} = game) do
+    black = Deck.discard(black, [card])
+    %Game{game | black: black, card: nil}
   end
 end
