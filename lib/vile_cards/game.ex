@@ -66,6 +66,15 @@ defmodule VileCards.Game do
     end)
   end
 
+  def czar_pick(%Game{players: players} = game, player_id) do
+    updated_players =
+      Map.replace_lazy(players, player_id, fn player ->
+        Map.replace_lazy(player, :score, fn score -> score + 1 end)
+      end)
+
+    %Game{game | players: updated_players}
+  end
+
   defp discard_picks(%Game{players: players, white: white} = game) do
     {updated_white, updated_players} =
       players

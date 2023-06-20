@@ -262,4 +262,34 @@ defmodule VileCards.GameTest do
              |> MapSet.equal?(MapSet.new(pick_3 ++ hand_3))
     end
   end
+
+  describe "czar_pick/2" do
+    test "increments the picked player's score" do
+      game = %Game{
+        players: %{
+          "id-1" =>
+            Player.new("id-1", "name-1")
+            |> Map.put(:hand, Enum.to_list(1..10)),
+          "id-2" =>
+            Player.new("id-2", "name-2")
+            |> Map.put(:hand, Enum.to_list(13..20))
+            |> Map.put(:pick, [11, 12]),
+          "id-3" =>
+            Player.new("id-3", "name-3")
+            |> Map.put(:hand, Enum.to_list(21..30))
+            |> Map.put(:pick, [21, 22])
+        },
+        card: %{pick: 2},
+        czar: "id-1"
+      }
+
+      assert %Game{
+               players: %{
+                 "id-1" => %Player{score: 0},
+                 "id-2" => %Player{score: 0},
+                 "id-3" => %Player{score: 1}
+               }
+             } = Game.czar_pick(game, "id-3")
+    end
+  end
 end
