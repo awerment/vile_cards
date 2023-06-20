@@ -6,8 +6,8 @@ defmodule VileCards.Game do
   def new({id, name} = _admin, black, white) do
     %Game{
       players: %{id => Player.new(id, name)},
-      black: {black, []},
-      white: {white, []}
+      black: {Enum.shuffle(black), []},
+      white: {Enum.shuffle(white), []}
     }
   end
 
