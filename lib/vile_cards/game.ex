@@ -76,8 +76,12 @@ defmodule VileCards.Game do
     %Game{game | players: updated_players}
   end
 
-  def force_czar_pick(%Game{players: players} = game) do
-    {id, _player} = Enum.random(players)
+  def force_czar_pick(%Game{players: players, czar: czar} = game) do
+    {id, _player} =
+      players
+      |> Enum.filter(fn {id, _player} -> id != czar end)
+      |> Enum.random()
+
     czar_pick(game, id)
   end
 
