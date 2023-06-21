@@ -1,7 +1,7 @@
-defmodule VileCards.GameTest do
+defmodule VileCards.Core.GameTest do
   use ExUnit.Case
 
-  alias VileCards.{Game, Player}
+  alias VileCards.Core.{Game, Player}
 
   describe "new/3" do
     test "creates a new Game struct with default fields" do

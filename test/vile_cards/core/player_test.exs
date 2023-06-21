@@ -1,7 +1,7 @@
-defmodule VileCards.PlayerTest do
+defmodule VileCards.Core.PlayerTest do
   use ExUnit.Case
 
-  alias VileCards.Player
+  alias VileCards.Core.Player
 
   describe "new/2" do
     test "creates a new player struct with default fields" do

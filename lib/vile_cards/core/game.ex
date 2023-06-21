@@ -1,7 +1,7 @@
-defmodule VileCards.Game do
+defmodule VileCards.Core.Game do
   defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0, card: nil, czar: nil
 
-  alias VileCards.{Deck, Game, Player}
+  alias VileCards.Core.{Deck, Game, Player}
 
   def new({id, name} = _admin, black, white) do
     %Game{

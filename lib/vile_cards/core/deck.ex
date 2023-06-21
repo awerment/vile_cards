@@ -1,4 +1,4 @@
-defmodule VileCards.Deck do
+defmodule VileCards.Core.Deck do
   def draw(deck, num) do
     do_draw(deck, num, [])
   end

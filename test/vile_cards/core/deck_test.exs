@@ -1,7 +1,7 @@
-defmodule VileCards.DeckTest do
+defmodule VileCards.Core.DeckTest do
   use ExUnit.Case
 
-  alias VileCards.Deck
+  alias VileCards.Core.Deck
 
   describe "draw/2" do
     test "returns tuple with updated deck and drawn cards" do
