@@ -45,7 +45,8 @@ defmodule VileCards.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       # test
-      {:floki, ">= 0.30.0", only: :test}
+      {:floki, ">= 0.30.0", only: :test},
+      {:mox, "~> 1.0.2", only: :test}
     ]
   end
 

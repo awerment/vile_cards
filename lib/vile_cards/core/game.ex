@@ -3,6 +3,20 @@ defmodule VileCards.Core.Game do
 
   alias VileCards.Core.{Deck, Game, Player}
 
+  @type t :: %__MODULE__{}
+
+  @type player :: {String.t(), String.t()}
+  @type deck :: {list, list}
+
+  @callback new(player, deck, deck) :: Game.t()
+  @callback player_join(Game.t(), player) :: Game.t()
+  @callback player_leave(Game.t(), String.t()) :: Game.t()
+  @callback start_round(Game.t()) :: Game.t()
+  @callback player_pick(Game.t(), String.t(), list) :: Game.t()
+  @callback force_picks(Game.t()) :: Game.t()
+  @callback czar_pick(Game.t(), String.t()) :: Game.t()
+  @callback force_czar_pick(Game.t()) :: Game.t()
+
   def new({id, name} = _admin, black, white) do
     %Game{
       players: %{id => Player.new(id, name)},

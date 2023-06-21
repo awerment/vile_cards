@@ -1,5 +1,7 @@
 import Config
 
+config :vile_cards, core: VileCards.Core.GameMock
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :vile_cards, VileCardsWeb.Endpoint,
