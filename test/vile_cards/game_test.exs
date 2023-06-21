@@ -293,6 +293,38 @@ defmodule VileCards.GameTest do
     end
   end
 
+  describe "force_czar_pick/1" do
+    test "selects a round winner randomly" do
+      game = %Game{
+        players: %{
+          "id-1" =>
+            Player.new("id-1", "name-1")
+            |> Map.put(:hand, Enum.to_list(1..10)),
+          "id-2" =>
+            Player.new("id-2", "name-2")
+            |> Map.put(:hand, Enum.to_list(13..20))
+            |> Map.put(:pick, [11, 12]),
+          "id-3" =>
+            Player.new("id-3", "name-3")
+            |> Map.put(:hand, Enum.to_list(21..30))
+            |> Map.put(:pick, [21, 22])
+        },
+        card: %{pick: 2},
+        czar: "id-1"
+      }
+
+      assert %Game{
+               players: %{
+                 "id-1" => %Player{score: 0},
+                 "id-2" => %Player{score: score_1},
+                 "id-3" => %Player{score: score_2}
+               }
+             } = Game.force_czar_pick(game)
+
+      assert score_1 + score_2 == 1
+    end
+  end
+
   describe "all together now" do
     test "8 players, playing 1000 rounds, picking 1..3 cards" do
       game =

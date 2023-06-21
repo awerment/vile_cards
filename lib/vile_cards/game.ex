@@ -76,6 +76,11 @@ defmodule VileCards.Game do
     %Game{game | players: updated_players}
   end
 
+  def force_czar_pick(%Game{players: players} = game) do
+    {id, _player} = Enum.random(players)
+    czar_pick(game, id)
+  end
+
   defp discard_picks(%Game{players: players, white: white} = game) do
     {updated_white, updated_players} =
       players
