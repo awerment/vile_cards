@@ -1,5 +1,11 @@
 defmodule VileCards.Core.Game do
-  defstruct players: %{}, black: {[], []}, white: {[], []}, round: 0, card: nil, czar: nil
+  defstruct id: nil,
+            players: %{},
+            black: {[], []},
+            white: {[], []},
+            round: 0,
+            card: nil,
+            czar: nil
 
   alias VileCards.Core.{Deck, Game, Player}
 
@@ -8,7 +14,7 @@ defmodule VileCards.Core.Game do
   @type player :: {String.t(), String.t()}
   @type deck :: {list, list}
 
-  @callback new(player, deck, deck) :: Game.t()
+  @callback new(String.t(), player, deck, deck) :: Game.t()
   @callback player_join(Game.t(), player) :: Game.t()
   @callback player_leave(Game.t(), String.t()) :: Game.t()
   @callback start_round(Game.t()) :: Game.t()
@@ -17,8 +23,9 @@ defmodule VileCards.Core.Game do
   @callback czar_pick(Game.t(), String.t()) :: Game.t()
   @callback force_czar_pick(Game.t()) :: Game.t()
 
-  def new({id, name} = _admin, black, white) do
+  def new(game_id, {id, name} = _admin, black, white) do
     %Game{
+      id: game_id,
       players: %{id => Player.new(id, name)},
       black: {Enum.shuffle(black), []},
       white: {Enum.shuffle(white), []}

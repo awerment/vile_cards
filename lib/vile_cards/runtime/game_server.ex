@@ -3,8 +3,8 @@ defmodule VileCards.Runtime.GameServer do
 
   # Client API
 
-  def start_link({id, name}, black, white) do
-    GenServer.start_link(__MODULE__, {{id, name}, black, white})
+  def start_link(game_id, {id, name}, black, white) do
+    GenServer.start_link(__MODULE__, {game_id, {id, name}, black, white})
   end
 
   def player_join(server, {id, name}) do
@@ -37,8 +37,8 @@ defmodule VileCards.Runtime.GameServer do
 
   # GenServer Callbacks
 
-  def init({{id, name}, black, white}) do
-    {:ok, impl().new({id, name}, black, white)}
+  def init({game_id, {id, name}, black, white}) do
+    {:ok, impl().new(game_id, {id, name}, black, white)}
   end
 
   def handle_call({:player_join, {id, name}}, _from, game) do

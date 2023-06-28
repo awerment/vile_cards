@@ -5,8 +5,9 @@ defmodule VileCards.Core.GameTest do
 
   describe "new/3" do
     test "creates a new Game struct with default fields" do
-      assert Game.new({"id", "name"}, ["a black card"], ["a white card"]) ==
+      assert Game.new("game-id-1", {"id", "name"}, ["a black card"], ["a white card"]) ==
                %Game{
+                 id: "game-id-1",
                  players: %{"id" => %Player{id: "id", name: "name"}},
                  black: {["a black card"], []},
                  white: {["a white card"], []},
@@ -20,8 +21,8 @@ defmodule VileCards.Core.GameTest do
   describe "player_join/2" do
     test "adds a new player" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new([], [])
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, [], [])
         |> Game.player_join({"id-2", "name-2"})
 
       assert %Game{
@@ -33,9 +34,7 @@ defmodule VileCards.Core.GameTest do
     end
 
     test "does not add an already existing player (by id)" do
-      game =
-        {"id", "name"}
-        |> Game.new([], [])
+      game = Game.new("game-id-1", {"id", "name"}, [], [])
 
       assert %{"id" => %Player{id: "id", name: "name"}} = game.players
 
@@ -48,8 +47,8 @@ defmodule VileCards.Core.GameTest do
   describe "player_leave/2" do
     test "removes an existing player (by id)" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new([], [])
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, [], [])
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_leave("id-1")
 
@@ -58,8 +57,8 @@ defmodule VileCards.Core.GameTest do
 
     test "noop on unknown player id" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new([], [])
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, [], [])
         |> Game.player_leave("unknown")
 
       assert %{"id-1" => %Player{id: "id-1", name: "name-1"}} = game.players
@@ -69,8 +68,8 @@ defmodule VileCards.Core.GameTest do
   describe "deal/1" do
     test "deals white cards to players' hands" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
 
       assert %{"id-1" => %Player{hand: []}, "id-2" => %Player{hand: []}} = game.players
@@ -89,8 +88,8 @@ defmodule VileCards.Core.GameTest do
   describe "player_pick/3" do
     test "updates the player's pick" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Game.start_round()
         # force czar
@@ -108,8 +107,8 @@ defmodule VileCards.Core.GameTest do
   describe "start_round/1" do
     test "starts a new round" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_join({"id-3", "name-3"})
 
@@ -125,8 +124,8 @@ defmodule VileCards.Core.GameTest do
 
     test "picks a new czar, cycling through players sorted by id" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_join({"id-3", "name-3"})
         |> Map.put(:czar, "id-1")
@@ -143,8 +142,8 @@ defmodule VileCards.Core.GameTest do
 
     test "if czar has left, picks first player with id > previous czar's id" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_join({"id-3", "name-3"})
         |> Map.put(:czar, "id-1")
@@ -158,8 +157,8 @@ defmodule VileCards.Core.GameTest do
 
     test "only player left becomes czar" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Map.put(:czar, "id-1")
 
@@ -172,8 +171,8 @@ defmodule VileCards.Core.GameTest do
 
     test "when no players are left, sets czar to nil" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Map.put(:czar, "id-1")
 
@@ -191,8 +190,8 @@ defmodule VileCards.Core.GameTest do
 
     test "discards players' picked cards" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..10), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..10), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_join({"id-3", "name-3"})
         |> Game.start_round()
@@ -328,8 +327,8 @@ defmodule VileCards.Core.GameTest do
   describe "all together now" do
     test "8 players, playing 1000 rounds, picking 1..3 cards" do
       game =
-        {"id-1", "name-1"}
-        |> Game.new(Enum.to_list(1..20), Enum.to_list(1..100))
+        "game-id-1"
+        |> Game.new({"id-1", "name-1"}, Enum.to_list(1..20), Enum.to_list(1..100))
         |> Game.player_join({"id-2", "name-2"})
         |> Game.player_join({"id-3", "name-3"})
         |> Game.player_join({"id-4", "name-4"})

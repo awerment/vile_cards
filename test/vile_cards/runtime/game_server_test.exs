@@ -10,9 +10,9 @@ defmodule VileCards.Runtime.GameServerTest do
   @deck {[], []}
   setup context do
     if Map.get(context, :game, false) do
-      expect(GameMock, :new, fn {"id-1", "name-1"}, _black, _white -> :ok end)
+      expect(GameMock, :new, fn "game-id-1", {"id-1", "name-1"}, _black, _white -> :ok end)
 
-      {:ok, game} = GameServer.start_link({"id-1", "name-1"}, @deck, @deck)
+      {:ok, game} = GameServer.start_link("game-id-1", {"id-1", "name-1"}, @deck, @deck)
       {:ok, game: game}
     else
       :ok
@@ -20,9 +20,9 @@ defmodule VileCards.Runtime.GameServerTest do
   end
 
   test "start_link/3 calls Game.new/3" do
-    expect(GameMock, :new, fn {"id", "name"}, _black, _white -> :ok end)
+    expect(GameMock, :new, fn "game-id", {"id", "name"}, _black, _white -> :ok end)
 
-    assert {:ok, _pid} = GameServer.start_link({"id", "name"}, {[], []}, {[], []})
+    assert {:ok, _pid} = GameServer.start_link("game-id", {"id", "name"}, {[], []}, {[], []})
   end
 
   @tag :game
