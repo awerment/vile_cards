@@ -13,9 +13,11 @@ defmodule VileCards.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: VileCards.PubSub},
       # Start the Endpoint (http/https)
-      VileCardsWeb.Endpoint
+      VileCardsWeb.Endpoint,
       # Start a worker by calling: VileCards.Worker.start_link(arg)
       # {VileCards.Worker, arg}
+      {Registry, keys: :unique, name: VileCards.Runtime.GameRegistry},
+      {DynamicSupervisor, strategy: :one_for_one, name: VileCards.Runtime.GameSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
