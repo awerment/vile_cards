@@ -4,7 +4,13 @@ defmodule VileCards.Runtime.GameServer do
   # Client API
 
   def start_link(game_id, {id, name}, black, white) do
-    GenServer.start_link(__MODULE__, {game_id, {id, name}, black, white})
+    GenServer.start_link(__MODULE__, {game_id, {id, name}, black, white},
+      name: VileCards.game_via(game_id)
+    )
+  end
+
+  def child_spec([id | _] = args) do
+    %{id: id, start: {__MODULE__, :start_link, args}, restart: :transient}
   end
 
   def player_join(server, {id, name}) do

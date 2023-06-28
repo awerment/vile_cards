@@ -1,9 +1,18 @@
 defmodule VileCards do
   @moduledoc """
-  VileCards keeps the contexts that define your domain
-  and business logic.
-
-  Contexts are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
+  TODO
   """
+  alias VileCards.Runtime.{GameRegistry, GameServer, GameSupervisor}
+
+  def start_game(id, admin, black, white) do
+    DynamicSupervisor.start_child(GameSupervisor, {GameServer, [id, admin, black, white]})
+  end
+
+  def stop_game(pid) do
+    DynamicSupervisor.terminate_child(GameSupervisor, pid)
+  end
+
+  def game_via(id) do
+    {:via, Registry, {GameRegistry, id}}
+  end
 end
