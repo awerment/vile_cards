@@ -11,8 +11,7 @@ defmodule VileCards.Core.PlayerTest do
                  name: "name",
                  score: 0,
                  hand: [],
-                 pick: [],
-                 czar?: false
+                 pick: []
                }
     end
   end

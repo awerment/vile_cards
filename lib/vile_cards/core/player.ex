@@ -1,5 +1,5 @@
 defmodule VileCards.Core.Player do
-  defstruct id: nil, name: nil, score: 0, hand: [], pick: [], czar?: false
+  defstruct id: nil, name: nil, score: 0, hand: [], pick: []
 
   alias __MODULE__
 
