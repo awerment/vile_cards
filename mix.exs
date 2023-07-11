@@ -46,7 +46,8 @@ defmodule VileCards.MixProject do
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       # test
       {:floki, ">= 0.30.0", only: :test},
-      {:mox, "~> 1.0.2", only: :test}
+      {:mox, "~> 1.0.2", only: :test},
+      {:white_bread, git: "https://codeberg.org/srbaker/white-bread"}
     ]
   end
 

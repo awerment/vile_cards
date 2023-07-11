@@ -6,6 +6,7 @@
   "esbuild": {:hex, :esbuild, "0.7.0", "ce3afb13cd2c5fd63e13c0e2d0e0831487a97a7696cfa563707342bb825d122a", [:mix], [{:castore, ">= 0.0.0", [hex: :castore, repo: "hexpm", optional: false]}], "hexpm", "4ae9f4f237c5ebcb001390b8ada65a12fb2bb04f3fe3d1f1692b7a06fbfe8752"},
   "file_system": {:hex, :file_system, "0.2.10", "fb082005a9cd1711c05b5248710f8826b02d7d1784e7c3451f9c1231d4fc162d", [:mix], [], "hexpm", "41195edbfb562a593726eda3b3e8b103a309b733ad25f3d642ba49696bf715dc"},
   "floki": {:hex, :floki, "0.34.3", "5e2dcaec5d7c228ce5b1d3501502e308b2d79eb655e4191751a1fe491c37feac", [:mix], [], "hexpm", "9577440eea5b97924b4bf3c7ea55f7b8b6dce589f9b28b096cc294a8dc342341"},
+  "gherkin": {:hex, :gherkin, "1.6.0", "a7a2925e6153b7f475646e411e45eed657eb8648ae4bec4222334bf46d37798e", [:mix], [], "hexpm", "9631845a23f3dbde97ae576c1e67e928392b12fb0d0e976acb0ec5d4b5fd1881"},
   "jason": {:hex, :jason, "1.4.0", "e855647bc964a44e2f67df589ccf49105ae039d4179db7f6271dfd3843dc27e6", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "79a3791085b2a0f743ca04cec0f7be26443738779d09302e01318f97bdb82121"},
   "mime": {:hex, :mime, "2.0.5", "dc34c8efd439abe6ae0343edbb8556f4d63f178594894720607772a041b04b02", [:mix], [], "hexpm", "da0d64a365c45bc9935cc5c8a7fc5e49a0e0f9932a761c55d6c52b142780a05c"},
   "mox": {:hex, :mox, "1.0.2", "dc2057289ac478b35760ba74165b4b3f402f68803dd5aecd3bfd19c183815d64", [:mix], [], "hexpm", "f9864921b3aaf763c8741b5b8e6f908f44566f1e427b2630e89e9a73b981fef2"},
@@ -26,4 +27,5 @@
   "telemetry_poller": {:hex, :telemetry_poller, "1.0.0", "db91bb424e07f2bb6e73926fcafbfcbcb295f0193e0a00e825e589a0a47e8453", [:rebar3], [{:telemetry, "~> 1.0", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm", "b3a24eafd66c3f42da30fc3ca7dda1e9d546c12250a2d60d7b81d264fbec4f6e"},
   "websock": {:hex, :websock, "0.5.2", "b3c08511d8d79ed2c2f589ff430bd1fe799bb389686dafce86d28801783d8351", [:mix], [], "hexpm", "925f5de22fca6813dfa980fb62fd542ec43a2d1a1f83d2caec907483fe66ff05"},
   "websock_adapter": {:hex, :websock_adapter, "0.5.3", "4908718e42e4a548fc20e00e70848620a92f11f7a6add8cf0886c4232267498d", [:mix], [{:bandit, ">= 0.6.0", [hex: :bandit, repo: "hexpm", optional: true]}, {:plug, "~> 1.14", [hex: :plug, repo: "hexpm", optional: false]}, {:plug_cowboy, "~> 2.6", [hex: :plug_cowboy, repo: "hexpm", optional: true]}, {:websock, "~> 0.5", [hex: :websock, repo: "hexpm", optional: false]}], "hexpm", "cbe5b814c1f86b6ea002b52dd99f345aeecf1a1a6964e209d208fb404d930d3d"},
+  "white_bread": {:git, "https://codeberg.org/srbaker/white-bread", "c88dea43e339be3953a8c992abb11b21f9322763", []},
 }
